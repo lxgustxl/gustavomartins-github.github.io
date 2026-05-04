@@ -34,8 +34,14 @@ function handleRegistration(registration){
 if(navigator.serviceWorker){
   // For security reasons, a service worker can only control the pages
   // that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+  const currentScriptUrl = document.currentScript && document.currentScript.src
+    ? document.currentScript.src
+    : `${location.origin}/js/sw-registration.js`;
+  const serviceWorkerUrl = new URL('../sw.js', currentScriptUrl).pathname;
+  const serviceWorkerScope = new URL('../', currentScriptUrl).pathname;
+
   navigator.serviceWorker
-    .register('/sw.js')
+    .register(serviceWorkerUrl, { scope: serviceWorkerScope })
     .then((registration) => handleRegistration(registration))
     .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
 
